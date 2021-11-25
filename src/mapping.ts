@@ -2,9 +2,11 @@ import { DEVS, Transfer } from "../generated/DEVS/DEVS";
 import { Account, Token } from "../generated/schema";
 
 export function handleTransfer(event: Transfer): void {
-  const { tokenId, from, to } = event.params;
+  let tokenId = event.params.tokenId;
+  let from = event.params.from;
+  let to = event.params.to;
 
-  const contract = DEVS.bind(event.address);
+  let contract = DEVS.bind(event.address);
 
   let fromAccount = Account.load(from.toHex());
   let toAccount = Account.load(to.toHex());
@@ -14,7 +16,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // Just create new, as we don't need to use values from store
-  const token = new Token(tokenId.toString());
+  let token = new Token(tokenId.toString());
   token.owner = to.toHex();
   token.lastTransferTime = event.block.timestamp;
   token.lastTransferBlock = event.block.number;
@@ -34,11 +36,16 @@ export function handleTransfer(event: Transfer): void {
   toAccount.tokens.push(tokenId.toString());
   toAccount.save();
 
-  // Remove from sender's account, if applicable
+  // Remove from sender's account, if existant
   if (fromAccount) {
-    fromAccount.tokens = fromAccount.tokens.filter(
-      (token) => token !== tokenId.toString()
-    );
+    let newTokens: Array<string> = [];
+
+    for (let i = 0; i < fromAccount.tokens.length; i++) {
+      if (fromAccount.tokens[i] != tokenId.toString())
+        newTokens.push(fromAccount.tokens[i]);
+    }
+
+    fromAccount.tokens = newTokens;
     fromAccount.save();
   }
 }

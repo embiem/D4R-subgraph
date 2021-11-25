@@ -1,0 +1,20 @@
+type Token @entity {
+  id: ID!
+  owner: Account!
+  lastTransferTime: BigInt!
+  lastTransferBlock: BigInt!
+
+  os: String!
+  texteditor: String!
+  clothing: String!
+  language: String!
+  industry: String!
+  location: String!
+  mind: String!
+  vibe: String!
+}
+
+type Account @entity {
+  id: ID!
+  tokens: [Token!]!
+}
