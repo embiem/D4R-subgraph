@@ -1,5 +1,5 @@
 {
-  "name": "D4R",
+  "name": "d4r",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
