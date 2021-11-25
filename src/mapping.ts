@@ -33,7 +33,9 @@ export function handleTransfer(event: Transfer): void {
   token.save();
 
   // Reference in account
-  toAccount.tokens.push(tokenId.toString());
+  let tokens = toAccount.tokens;
+  tokens.push(tokenId.toString());
+  toAccount.tokens = tokens;
   toAccount.save();
 
   // Remove from sender's account, if existant
